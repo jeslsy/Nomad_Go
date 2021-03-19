@@ -7,23 +7,20 @@ import (
 )
 
 func main() {
+	// map 구조체 선언은 해야되나봐
 	dictionary := mydict.Dictionary{}
-	word := "hello"
-	definition := "Greeting"
-	err := dictionary.Add(word, definition)
 
-	// 항상 이렇게 에러처리 코드를 해줘야함
-	if err != nil {
-		fmt.Println(err)
+	baseWord := "hello"
+	dictionary.Add(baseWord, "First")
+
+	dictionary.Search(baseWord) // 단어 찾고
+	dictionary.Delete(baseWord) // 단어 삭제
+
+	word, err := dictionary.Search(baseWord)
+
+	if err != nil { // 삭제 못했으면
+		fmt.Println(err) // 삭제 실패 메시지 출력
+	} else {
+		fmt.Println(word) // 단어 없다고 출력
 	}
-
-	// 위에서 추가 됐을 테니 hello 로 받아서 출력!
-	hello, _ := dictionary.Search(word)
-	fmt.Println("found", word, "definition:", hello)
-
-	err2 := dictionary.Add(word, definition)
-	if err2 != nil {
-		fmt.Println(err2)
-	}
-	fmt.Println()
 }
