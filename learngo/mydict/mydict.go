@@ -61,3 +61,5 @@ func (d Dictionary) Delete(word string) error {
 	// 단어 삭제하고 nil 반환
 	return nil
 }
+
+// 에러가 nil이면 뭔가 실행된다는 걸 테니까,..!

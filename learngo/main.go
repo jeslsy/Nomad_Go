@@ -1,26 +1,50 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-
-	"github.com/jeslsy0507/learngo/mydict"
+	"net/http"
 )
 
+var errRequestFailed = errors.New("Request failed")
+
 func main() {
-	// map 구조체 선언은 해야되나봐
-	dictionary := mydict.Dictionary{}
+	//map 타입으로 results 정의
+	var results = make(map[string]string)
 
-	baseWord := "hello"
-	dictionary.Add(baseWord, "First")
-
-	dictionary.Search(baseWord) // 단어 찾고
-	dictionary.Delete(baseWord) // 단어 삭제
-
-	word, err := dictionary.Search(baseWord)
-
-	if err != nil { // 삭제 못했으면
-		fmt.Println(err) // 삭제 실패 메시지 출력
-	} else {
-		fmt.Println(word) // 단어 없다고 출력
+	urls := []string{
+		"https://www.airbnb.co.kr/",
+		"https://www.google.co.kr/",
+		"https://www.amazon.com/",
+		"https://www.reddit.com/",
+		"https://www.instagram.com/",
 	}
+
+	results["gello"] = "Hello"
+
+	for _, url := range urls {
+		result := "OK"
+		err := hitURL(url)
+		if err != nil { // err있으면
+			result = "FAILED"
+		}
+		results[url] = result
+	}
+
+	for url, result := range results {
+		fmt.Println(url, result)
+	}
+}
+
+// hit 못하면 에러를 반환해야 겠죠 ?
+func hitURL(url string) error {
+	fmt.Println("Checking:", url)
+	resp, err := http.Get(url)
+
+	// 상태 코드 400부터는 페이지 오류니까..!
+	if err != nil || resp.StatusCode >= 400 {
+		fmt.Println(err, resp.StatusCode)
+		return errRequestFailed
+	}
+	return nil
 }
